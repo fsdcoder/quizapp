@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1b1b1b;
+            margin: 0;
+            padding: 0;
+            color: snow;
+        }
+
+        #display
+        {
+            text-align: center;
+        }
+
+        .container {
+            max-width: 50vw;
+            height: 65vh;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: black;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(234, 0, 0, 0.1);
+        }
+
+        h3 {
+            color: #555;
+            text-align: center;
+        }
+
+        .timerandscore {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        #timer,
+        #score {
+            font-size: 15px;
+            margin: 0;
+        }
+
+        #number {
+            margin: 0;
+            font-size: 15px;
+        }
+
+        .question {
+            margin-top: 20px;
+            margin-top: 5%;
+        }
+
+
+        #question_conatiner {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        #option_container
+        {
+            margin-top: 10%;
+        }
+        #option_container button {
+            margin: auto;
+            display: block;
+            width: 50%;
+            padding: 10px;
+            border-radius: 15px;
+            margin-bottom: 5px;
+            font-size: 16px;
+            border: none;
+            background-color: gold;
+            color: black;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #option_container button:hover {
+            background-color: gray;
+        }
+
+        #click {
+            padding-left: 25px;
+            margin-left: 43%;
+            background-color: black;
+            border: 1px solid #ccc;
+            color: gold;
+            padding: 10px 20px;
+            border-radius: 15px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        #click:hover {
+            background-color: red;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="timerandscore">
+            <h2 id="timer"> TIME LEFT: <span id="time">220</span> seconds</h2>
+
+            <h2 id="score">SCORE: <span id="marks"></span></h2>
+
+        </div>
+
+        <div class="questionnumber">
+            <h2 id="number"></h2>
+        </div>
+        <div class="question" id="quiz">
+            <h2 id="question_conatiner"></h2>
+            <div id="option_container"></div>
+            <p id="display"> </p>
+            <button onclick="nextquestion()" id="click"> SUBMIT</button>
+            <div id="result"></div>
+            <!-- <button id="submit">submit</button> -->
+
+        </div>
+    </div>
+
+    <script>
+
+        const quizdata = [
+            {
+                question: 'What is the only continent with land in all four hemispheres?',
+                options: ['Asia', 'Africa', 'Australia', 'antarctica'],
+                answer: 'Africa'
+            },
+            {
+                question: 'Where did sushi originate?',
+                options: ['Japan', 'China', 'South Korea', 'Phillipines'],
+                answer: 'China'
+            },
+            {
+                question: 'What year was Cinderella released?',
+                options: ['1945', '1950', '1955', '1949'],
+                answer: '1950'
+            },
+            {
+                question: 'What color are Mickey Mouse shoes?',
+                options: ['Red', 'Green', 'Yellow', 'Blue'],
+                answer: 'Yellow'
+            },
+            {
+                question: 'What is the national sport of Japan?',
+                options: ['Karate', 'Hockey', 'Sumo Wrestling', 'Cricket'],
+                answer: 'Sumo Wrestling'
+            },
+            {
+                question: 'Where is Disney European theme park located?',
+                options: ['Paris', 'NYC', 'Canberra', 'Washingto D.C'],
+                answer: 'Paris'
+            },
+            {
+                question: 'What height is a regulation NBA basket In FEET?',
+                options: ['8', '10', '12', '14'],
+                answer: '10'
+            },
+            {
+                question: 'Who is the world highest-paid athlete in 2021?',
+                options: ['Messi', 'Virat Kohli', 'Conor McGregor', 'Ronaldo'],
+                answer: 'Conor McGregor'
+            },
+            {
+                question: 'Pink Ladies and Granny Smiths are types of what fruit?',
+                options: ['Strawberry', 'Orange', 'Banana', 'Apple'],
+                answer: 'Apple'
+            },
+            {
+                question: '2^3',
+                options: ['2', '8', '9', '6'],
+                answer: '8'
+            }
+
+        ];
+
+        let currentquestion = 0;
+        let marks = 0;
+        let timeleft = 220;
+        const timer = document.getElementById('time');
+        const timeinterval = setInterval(function () {
+            timeleft--;
+            timer.textContent = timeleft;
+
+            if (timeleft <= 0) {
+                clearInterval(timeinterval);
+                alert('time is over');
+            }
+        }, 1000);
+
+        const lenght = quizdata.length;
+        // console.log(lenght);
+
+        // console.log(quizdata.length);
+        function loadquestion() {
+            const question_conatiner = document.getElementById('question_conatiner');
+            const option_container = document.getElementById('option_container');
+            const number = document.getElementById('number');
+
+            question_conatiner.innerHTML = quizdata[currentquestion].question;
+
+            option_container.innerHTML = '';
+            quizdata[currentquestion].options.forEach(option => {
+                const button = document.createElement("button");
+                button.innerText = option;
+                button.addEventListener('click', () => {
+                    button.style.backgroundColor = 'rgb(63, 197, 241)';
+                    button.style.color = 'white';
+                })
+                button.addEventListener('click', () => selectanswer(option));
+                option_container.appendChild(button);
+            })
+
+            number.innerHTML = `${[currentquestion + 1]} / ${lenght}`;
+
+
+        }
+
+        function selectanswer(selectedoption) {
+            const answer = quizdata[currentquestion].answer;
+
+            if (selectedoption === answer) {
+
+                display.innerHTML = selectedoption + ': <h4>your answer is correct</h4>';
+                marks++
+                const mark = document.getElementById('marks').innerHTML = `${marks} / 10`;
+            } else {
+
+                display.innerHTML = selectedoption + '<h4> Wrong Answer </h4> <br> The correct Answer is : ' + answer;
+
+            }
+            const answerButtons = document.querySelectorAll('#option_container button');
+            answerButtons.forEach(button => {
+                button.disabled = true;
+            });
+
+            currentquestion++;
+        }
+
+        const click = document.getElementById('click');
+        click.addEventListener('mouseover', () => {
+            click.style.backgroundColor = 'rgb(63, 197, 241)';
+            click.style.color = 'white';
+        })
+
+        click.addEventListener('mouseout', () => {
+            click.style.backgroundColor = 'white';
+            click.style.color = 'rgb(63, 197, 241)';
+        })
+
+        function nextquestion() {
+
+
+            display.innerHTML = '';
+            if (currentquestion < quizdata.length) {
+                loadquestion();
+            } else {
+                submitanswer();
+            }
+        }
+
+        function submitanswer() {
+            const printscore = document.getElementById('result');
+            printscore.innerhtml = `<h4> your total marks is ${score} out of 10 </h4>`;
+
+            // alert('your total marks is = ', score);
+        }
+
+        loadquestion();
+    </script>
+</body>
+
+</html>
